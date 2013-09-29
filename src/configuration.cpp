@@ -1110,7 +1110,7 @@ bool CConfig::BuildLightpack(CDevice*& device, int devicenr, CClientsHandler& cl
 
   SetDeviceBus(lightpackdevice, devicenr);
   SetDeviceAddress(lightpackdevice, devicenr);
-  SetSerial(lightpackdevice, devicenr);
+  SetDeviceSerial(lightpackdevice, devicenr);
   SetDeviceAllowSync(lightpackdevice, devicenr);
   SetDeviceDebug(lightpackdevice, devicenr);
   SetDeviceThreadPriority(lightpackdevice, devicenr);
@@ -1373,7 +1373,7 @@ void CConfig::SetDeviceAddress(CDeviceUsb* device, int devicenr)
   device->SetDeviceAddress(address);
 }
 
-void CConfig::SetSerial(CDeviceUsb* device, int devicenr)
+void CConfig::SetDeviceSerial(CDeviceUsb* device, int devicenr)
 {
   string line, strvalue;
   int linenr = GetLineWithKey("serial", m_devicelines[devicenr].lines, line);

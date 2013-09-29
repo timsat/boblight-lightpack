@@ -60,6 +60,8 @@ bool CDeviceLightpack::SetupDevice()
   libusb_device** devicelist;
   ssize_t         nrdevices = libusb_get_device_list(m_usbcontext, &devicelist);
 
+  bool isSerialSet = strlen(m_serial) != 0;
+
   for (ssize_t i = 0; i < nrdevices; i++)
   {
     libusb_device_descriptor descriptor;
@@ -84,9 +86,10 @@ bool CDeviceLightpack::SetupDevice()
       else
         Log("%s: found Lightpack at bus %d address %d. Couldn't get serial.", m_name.c_str(), busnumber, deviceaddress);
 
-      if (m_devicehandle == NULL &&
-          ((strlen(m_serial)>0 && strncmp(m_serial, serial, USBDEVICE_SERIAL_SIZE))
-            || ( m_busnumber == -1 || m_deviceaddress == -1 || ( m_busnumber == busnumber && m_deviceaddress == deviceaddress ))))
+
+      if (m_devicehandle == NULL
+            && (isSerialSet && strncmp(m_serial, serial, USBDEVICE_SERIAL_SIZE)==0
+                || !isSerialSet && (m_busnumber == -1 || m_busnumber == busnumber) && (m_deviceaddress == -1 || m_deviceaddress == deviceaddress)))
       {
         libusb_device_handle *devhandle;
 
@@ -122,10 +125,14 @@ bool CDeviceLightpack::SetupDevice()
 
   if (m_devicehandle == NULL)
   {
-    if(m_busnumber == -1 || m_deviceaddress == -1)
-      LogError("%s: no Lightpack device with vid %04x and pid %04x found", m_name.c_str(), LIGHTPACK_VID, LIGHTPACK_PID);
-    else
-      LogError("%s: no Lightpack device with vid %04x and pid %04x found at bus %i, address %i", m_name.c_str(), LIGHTPACK_VID, LIGHTPACK_PID, m_busnumber, m_deviceaddress);
+    if(isSerialSet) {
+      LogError("%s: no Lightpack device with serial number %s found", m_name.c_str(), m_serial);
+    } else {
+      if(m_busnumber == -1 || m_deviceaddress == -1)
+        LogError("%s: no Lightpack device found", m_name.c_str(), LIGHTPACK_VID, LIGHTPACK_PID);
+      else
+        LogError("%s: no Lightpack device found at bus %i, address %i", m_name.c_str(), LIGHTPACK_VID, LIGHTPACK_PID, m_busnumber, m_deviceaddress);
+    }
 
     return false;
   }

@@ -128,7 +128,7 @@ class CConfig
 #ifdef HAVE_LIBUSB
     void SetDeviceBus(CDeviceUsb* device, int devicenr);
     void SetDeviceAddress(CDeviceUsb* device, int devicenr);
-    void SetSerial(CDeviceUsb* device, int devicenr);
+    void SetDeviceSerial(CDeviceUsb* device, int devicenr);
 #endif
     void SetDeviceAllowSync(CDevice* device, int devicenr);
     void SetDeviceDebug(CDevice* device, int devicenr);
