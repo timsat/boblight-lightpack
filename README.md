@@ -1,4 +1,4 @@
-boblight-lightpack
+boblight-lightpack (archived project)
 ==================
 
 boblight with Lightpack support
